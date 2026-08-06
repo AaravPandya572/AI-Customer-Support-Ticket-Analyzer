@@ -1,0 +1,7 @@
+venv/
+.env
+__pycache__/
+*.pyc
+db/tickets.db
+data/raw/twcs.csv
+data/processed/tickets_cleaned.csv
