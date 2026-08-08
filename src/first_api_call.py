@@ -7,8 +7,6 @@ def main():
     load_dotenv()
     
     # 2. Initialize the Gemini client. 
-    # Because we ran load_dotenv() above, genai.Client() will automatically 
-    # find GEMINI_API_KEY in the background without us typing it here.
     client = genai.Client()
     
     # 3. Define the test prompt
