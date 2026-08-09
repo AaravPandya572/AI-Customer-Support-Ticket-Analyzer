@@ -24,3 +24,29 @@ Tested the initial structured JSON prompt using the `gemini-3.6-flash` model on 
 - **The Problem:** When presented with a vague, contextless ticket (*"I understand but nobody is replying back. Please I need to go to work."*), the AI initially hallucinated and guessed the category as "Delivery Problem". 
 - **The Fix:** Added an explicit fallback rule to the prompt: *"If the ticket is vague, ambiguous, or does not contain enough context to confidently identify a specific category, set "category" to "General Query" and "priority" to "Medium'."*
 - **Outcome:** The fix worked perfectly. Upon re-testing, the AI correctly categorized the ambiguous ticket as a "General Query" with "Medium" priority, and adjusted its suggested response to urgently ask the customer for more details without making assumptions.
+
+# Day 6: Few-Shot Prompting Results
+
+## Overview
+Tested the upgraded `few_shot_prompt.py` script. The prompt now includes three hardcoded examples (a standard issue, a delivery issue, and a vague issue) to provide the Gemini 3.6 Flash model with strict pattern matching.
+
+## JSON Parsing Reliability
+- **Parsing Success:** 100%. The AI perfectly matched the formatting of the provided examples, returning clean JSON with no markdown blocks or extra conversational text.
+- **Constraint Adherence:** The AI strictly followed the provided categories and priority levels.
+
+## Ticket Results Summary & Improvements
+1. **General Alert for Strange Issue ("seems like a problem"):** 
+   - **Result:** General Query / Medium
+   - **Note:** Massive improvement over Zero-Shot. The model correctly identified the lack of specific context and used the "escape hatch" example.
+2. **Urgent Vague Complaint ("nobody is replying back. Please I need to go to work"):** 
+   - **Result:** General Query / Medium
+   - **Note:** Handled perfectly. The AI correctly identified it as a vague query and provided a highly empathetic, urgency-aware response without hallucinating a fake category.
+3. **Suspicious Phishing Email (Apple):** 
+   - **Result:** Billing / High
+   - **Note:** Consistent with Zero-Shot, prioritizing security and potential fraud appropriately.
+4. **Mobile Data Complaint (Glasgow City Centre):** 
+   - **Result:** Technical Issue / High
+   - **Note:** Upgraded to High priority (was Medium in Zero-Shot), which is a much better business decision for a complete loss of service ("Can't even find a server").
+
+## Conclusion
+Adding few-shot examples drastically improved the model's consistency and reasoning. It eliminated hallucinations on vague tickets and produced much more accurate priority assignments.
