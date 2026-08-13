@@ -11,7 +11,8 @@ Fields required: "summary", "category" (Billing, Technical Issue, Delivery Probl
 
 Rules:
 1. If the ticket is vague or lacks context, set category to "General Query" and priority to "Medium".
-2. Respond with ONLY the JSON object.
+2. "Delivery Problem" is ONLY for physical packages or food delivery, NOT for public transit or passenger train delays (use "General Query" for transit delays).
+3. Respond with ONLY the JSON object.
 
 --- Example 1 (Standard Issue) ---
 Ticket: 'My screen went black and won't turn on.'
@@ -33,7 +34,7 @@ Response:
     "suggested_response": "I apologize for the delay in your delivery. Let me pull up your tracking information right away to see where it is."
 }}
 
---- Example 3 (The Vague "Escape Hatch") ---
+--- Example 3 (The Vague Ticket) ---
 Ticket: 'This is ridiculous.'
 Response:
 {{
@@ -43,9 +44,20 @@ Response:
     "suggested_response": "I am very sorry you are having a frustrating experience. Could you please provide a bit more detail about what happened so I can help resolve this?"
 }}
 
+--- Example 4 (Account Security / Edge Case) ---
+Ticket: 'hi! Is this an official apple email? If so, I didn’t buy anything that’s on this receipt! 😱😱'
+Response:
+{{
+    "summary": "The customer received a suspicious email receipt for an unauthorized purchase.",
+    "category": "Account Access",
+    "priority": "High",
+    "suggested_response": "Please do not click on any links in that email, as it appears to be a phishing attempt. Official receipts do not use shortened URLs. I recommend checking your actual account history directly through your device settings."
+}}
+
 --- Actual Ticket ---
 Ticket: '{ticket_text}'
 Response:"""
+
 
 def analyze_ticket(client, ticket_text):
     prompt = get_few_shot_prompt(ticket_text)
